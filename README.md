@@ -24,7 +24,6 @@ This project aims to build a **multi-label classification model** for survey res
    - Model was trained using 3 epochs with batch sizes of 8.
    - Evaluated the model during training and after the final epoch to determine optimal thresholds for label classification.
    - Saved the trained model and tokenizer for future use, along with **best thresholds** and **training arguments**.
-
 4. **Saving & Downloading the Model**
    - After training, the model and tokenizer were saved in a directory for easy retrieval.
    - Created a zip file of the saved model and training artifacts, allowing the user to download and use it for inference or further training.
