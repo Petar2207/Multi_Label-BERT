@@ -28,12 +28,8 @@ This project aims to build a **multi-label classification model** for survey res
    - After training, the model and tokenizer were saved in a directory for easy retrieval.
    - Created a zip file of the saved model and training artifacts, allowing the user to download and use it for inference or further training.
    - 
-# Model Loading and Example Usage
+**Model Loading and Example Usage
 I also loaded notebook that demonstrates how to load a pre-trained model and provides an example of how to use it for predictions.
-
-# Loading the pre-trained model
-model = torch.load('path_to_model.pth')
-model.eval()  # Set the model to evaluation mode
 
 🛠️ **Tech Stack**
 - **Languages**: Python
