@@ -1,50 +1,137 @@
-# Survey Classification Model: Multi-Label Classification with BERT
+# 📘 Survey Response Classification — Multi-Label BERT Model
 
-This project aims to build a **multi-label classification model** for survey responses, where the goal is to predict multiple categories based on the survey's **questionText** and **answer**. Using **BERT** (Bidirectional Encoder Representations from Transformers) from the Hugging Face library, we fine-tune the model to identify which survey responses belong to which labels.
+This project builds a **multi-label text classification model** for survey responses using a fine-tuned **multilingual BERT** model. Each prediction assigns one or more categories based on the combined text of the **questionText** and **answer** fields.
 
-🎯 **Project Goal**
-- **Primary Objective**: 
-  To classify survey responses into multiple categories using a BERT-based model. The focus is on predicting categories (multi-label classification) for each pair of **questionText** and **answer**.
-
-✅ **Workflow Summary**
-
-1. **Data Cleaning & Preparation**
-   - Removed irrelevant column (e.g., `category_type`) from the dataset.
-   - Split the data into features (`questionText`, `answer`) and labels (`category_type`).
-   - Performed tokenization of text using BERT tokenizer for model input.
-   - Data was split into a training set (90%) and test set (10%) for evaluation.
-   - **Automated Preprocessing Added**: The script includes a preprocessing pipeline to tokenize text data and prepare it for model training.
-
-2. **Model Building**
-   - Used the **BERT-base-multilingual-cased** model to fine-tune for multi-label classification.
-   - Implemented a custom **Trainer class** to use **BCEWithLogitsLoss** for multi-label classification tasks.
-   - Evaluated model performance with custom metrics such as **F1 score**, **Precision**, and **Recall**.
-
-3. **Training & Evaluation**
-   - Model was trained using 3 epochs with batch sizes of 8.
-   - Evaluated the model during training and after the final epoch to determine optimal thresholds for label classification.
-   - Saved the trained model and tokenizer for future use, along with **best thresholds** and **training arguments**.
-4. **Saving & Downloading the Model**
-   - After training, the model and tokenizer were saved in a directory for easy retrieval.
-   - Created a zip file of the saved model and training artifacts, allowing the user to download and use it for inference or further training.
-   - 
-**Model Loading and Example Usage**
-I also loaded notebook that demonstrates how to load a pre-trained model and provides an example of how to use it for predictions.
-
-🛠️ **Tech Stack**
-- **Languages**: Python
-- **Libraries**: pandas, numpy, scikit-learn, torch, transformers, matplotlib, seaborn
-
-📜 **License**
-This project is licensed under the MIT License — free to use and modify.
-
-👤 **Author**
-Petar Rajic
+The project includes the complete workflow: data preprocessing, label binarization, tokenization, selective BERT layer unfreezing, model training, threshold optimization, model export, and an inference pipeline.
 
 ---
 
-To install the required libraries, use:
+## 🚀 Features
 
-```bash
-pip install --upgrade --force-reinstall transformers==4.52.4
-pip install -q transformers datasets scikit-learn pandas accelerate openpyxl
+### **Multi-Label Classification**
+
+### **Multilingual BERT Fine-Tuning**
+Uses **`bert-base-multilingual-cased`**, enabling support for multiple languages.
+
+### **Selective Layer Freezing**
+- All lower transformer layers are frozen  
+- Only the top **4 BERT layers** and the **classification head** are trainable  
+This stabilizes training and prevents overfitting.
+
+### **Threshold Optimization**
+Optimal decision thresholds are computed per label to maximize **F1-score**.
+
+### **Full Model Export**
+The final model export includes:
+- Model weights  
+- Tokenizer  
+- Label list  
+- Optimized thresholds  
+- Training arguments  
+- Checkpoints  
+
+---
+
+
+## 📦 Data Preparation
+
+Performed in the training notebook:
+
+- Text cleaning and whitespace normalization  
+- Removal of missing or empty rows  
+- Extraction of category strings into label lists  
+- Multi-hot encoding via **MultiLabelBinarizer**  
+- Two-stage splitting into **train / validation / test** sets
+- Upsampling
+
+---
+
+## 🔤 Tokenization
+
+- Inputs created by concatenating:  
+  **`questionText + answer`**  
+- Uses standard BERT tokenization with:  
+  - truncation  
+  - padding  
+  - attention masks  
+
+---
+
+## 🤖 Model Architecture
+
+The system uses **`AutoModelForSequenceClassification`** configured for multi-label classification.
+
+- Loss function: **BCEWithLogitsLoss**  
+- Fully compatible with multi-label outputs  
+
+---
+
+## 🔒 Layer Freezing Strategy
+
+During training:
+
+- All BERT layers start **frozen**
+- Then, **only the top 4 encoder layers** and the **classification head** are unfrozen
+- Remaining layers stay frozen throughout training  
+This improves efficiency and performance, especially on smaller datasets.
+
+---
+
+## 🏋️ Training
+
+Training is powered by the HuggingFace **Trainer API**, including:
+
+- Evaluation every epoch  
+- Metrics: precision, recall, micro/macro F1  
+- Automatic best-checkpoint saving  
+- Full logging and monitoring support  
+
+---
+
+## 📈 Threshold Optimization
+
+After training:
+
+- Model predicts raw logits on the validation set  
+- Label-specific thresholds are computed to maximize F1  
+- These thresholds significantly improve multi-label prediction accuracy  
+
+---
+
+## 💾 Model Saving
+
+The model export includes:
+
+- Trained model  
+- Tokenizer  
+- Label names  
+- Best-performing thresholds  
+- Training arguments  
+- Checkpoints  
+- A downloadable ZIP file with everything included  
+
+---
+
+## 🔍 Inference
+
+The inference notebook loads:
+
+- Final trained model  
+- Tokenizer  
+- Label names  
+- Saved per-label thresholds  
+
+It then processes new **question + answer** pairs and outputs all predicted categories.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 👤 Author
+
+**Petar Rajic**
+
