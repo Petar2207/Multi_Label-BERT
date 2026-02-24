@@ -71,9 +71,7 @@ The system uses **`AutoModelForSequenceClassification`** configured for multi-la
 During training:
 
 - All BERT layers start **frozen**
-- Then, **only the top 4 encoder layers** and the **classification head** are unfrozen
-- Remaining layers stay frozen throughout training  
-This improves efficiency and performance, especially on smaller datasets.
+- Then, **all 12 encoder layers** and the **classification head** are unfrozen
 
 ---
 
